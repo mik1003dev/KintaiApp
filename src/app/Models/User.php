@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Stamp;
+use App\Models\StampCorrectionRequest;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -20,7 +22,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'email_verified_at',
         'password',
+        'role',
     ];
 
     /**
@@ -41,4 +45,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /* ユーザーが持つ勤怠一覧 */
+    public function stamps()
+    {
+        return $this->hasMany(Stamp::class);
+    }
+
+    /* ユーザーが申請した修正申請一覧 */
+    public function correctionRequests()
+    {
+        return $this->hasMany(StampCorrectionRequest::class);
+    }
+
+    /* ユーザーが承認した修正申請一覧（管理者用） */
+    public function approvedRequests()
+    {
+        return $this->hasMany(StampCorrectionRequest::class, 'approved_by');
+    }
 }
