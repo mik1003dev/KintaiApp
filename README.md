@@ -22,7 +22,7 @@ cd KintaiApp
 cd src
 cp .env.example .env
 ```
-.envのDB設定を以下に変更します。
+コピー後、`.env` のDB設定を以下に変更します。
 ```bash
 DB_CONNECTION=mysql
 DB_HOST=mysql
