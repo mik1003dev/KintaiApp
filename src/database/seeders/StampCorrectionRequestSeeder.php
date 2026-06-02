@@ -44,10 +44,14 @@ class StampCorrectionRequestSeeder extends Seeder
 
     private function findStamp($userId, Carbon $preferredDate)
     {
+        $targetDate = $preferredDate->lessThanOrEqualTo(Carbon::today())
+            ? $preferredDate
+            : Carbon::today();
+
         return Stamp::where('user_id', $userId)
-            ->whereDate('work_date', '>=', $preferredDate->toDateString())
+            ->whereDate('work_date', '<=', $targetDate->toDateString())
             ->whereNotNull('clock_out_at')
-            ->orderBy('work_date')
+            ->orderByDesc('work_date')
             ->firstOrFail();
     }
 
